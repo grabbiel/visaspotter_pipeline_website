@@ -1,0 +1,29 @@
+.DragDropZone {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ErrorBackground {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    background-color: red;
+    animation-name: jump;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes jump {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0;
+    }
+}

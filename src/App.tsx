@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Home from "./Home";
+import { User } from "@auth0/auth0-react";
 
-function App() {
-  const [count, setCount] = useState(0)
+type AppProps = {
+  userCredentials: User;
+  serverIsBusy: boolean;
+};
 
+type WaitingProps = {
+  serverIsBusy: boolean;
+};
+
+function App({ userCredentials, serverIsBusy }: AppProps) {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes>
+      <Route
+        path="/"
+        element={
+          serverIsBusy === true ? (
+            <Navigate to="/waiting" replace />
+          ) : (
+            <Home loginEmail={userCredentials["email"]} />
+          )
+        }
+      />
+      <Route
+        path="/waiting"
+        element={<Waiting serverIsBusy={serverIsBusy} />}
+      ></Route>
+    </Routes>
+  );
 }
 
-export default App
+const Waiting = ({ serverIsBusy }: WaitingProps) => {
+  return serverIsBusy ? (
+    <div>
+      Waiting for background task to finish...
+      <br />
+      Try again later...
+    </div>
+  ) : (
+    <Navigate to="/" replace />
+  );
+};
+
+export default App;
